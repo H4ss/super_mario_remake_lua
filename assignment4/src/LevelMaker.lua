@@ -272,3 +272,18 @@ function getKeyLockBase(keyOrLock, blockHeight, x, keyLockColor)
         frame = KEYS_LOCKS[keyLockColor] + keyOrLock
     }
 end
+
+function getFlag(tiles, objects, width, height, flagPostColor)
+
+    local flag = {}
+    local yPos = 6
+    local xPos = -1
+
+    -- check valid flag position
+    for x = width - 1, 1, -1 do
+        if tiles[yPos][x].id == TILE_ID_EMPTY and tiles[yPos + 1][x].id == TILE_ID_GROUND then
+            xPos = x
+            break
+        end
+    end
+end

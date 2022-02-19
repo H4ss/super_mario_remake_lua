@@ -65,7 +65,7 @@ function PlayerJumpState:update(dt)
                 self.player.dy = 0
                 self.player:changeState('falling')
             elseif object.consumable then
-                object.onConsume(self.player)
+                object.onConsume(self.player, object)
                 table.remove(self.player.level.objects, k)
             end
         end
@@ -76,6 +76,13 @@ function PlayerJumpState:update(dt)
         if entity:collides(self.player) then
             gSounds['death']:play()
             gStateMachine:change('start')
+        end
+    end
+
+    -- remove lock block if marked as remove
+    for k, object in pairs(self.player.level.objects) do
+        if object.remove then
+            table.remove(self.player.level.objects, k)
         end
     end
 end

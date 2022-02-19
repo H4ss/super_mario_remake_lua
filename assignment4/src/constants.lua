@@ -98,3 +98,13 @@ KEYS_LOCKS = {
 
 KEY_ID = 0
 LOCK_ID = 4
+
+FLAG_POSTS = {
+    1, 2, 3, 4, 5, 6
+}
+
+FLAGS = {
+    7, 16, 25, 34
+}
+
+FLAG_OFFSET = 9

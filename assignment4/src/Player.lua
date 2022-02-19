@@ -81,7 +81,7 @@ function Player:checkObjectCollisions()
             if object.solid then
                 table.insert(collidedObjects, object)
             elseif object.consumable then
-                object.onConsume(self)
+                object.onConsume(self, object)
                 table.remove(self.level.objects, k)
             end
         end

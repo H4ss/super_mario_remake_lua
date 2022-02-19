@@ -73,6 +73,11 @@ function PlayState:render()
 
     self.player:render()
     love.graphics.pop()
+
+    -- render key
+    if self.player.keyObj then
+        love.graphics.draw(gTextures[self.player.keyObj.texture], gFrames[self.player.keyObj.texture][self.player.keyObj.frame], 5, 20)
+    end
     
     -- render score
     love.graphics.setFont(gFonts['medium'])
