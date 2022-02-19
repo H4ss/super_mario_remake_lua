@@ -38,5 +38,10 @@ function GameObject:update(dt)
 end
 
 function GameObject:render()
-    love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.frame], self.x, self.y)
+    if self.animation then
+        love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.animation:getCurrentFrame()],self.x,self.y)
+    else
+        love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.frame], self.x, self.y)
+
+    end
 end

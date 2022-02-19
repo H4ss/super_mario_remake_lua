@@ -286,4 +286,15 @@ function getFlag(tiles, objects, width, height, flagPostColor)
             break
         end
     end
+
+    for k , obj  in pairs(objects) do
+        if obj.x == (xPos - 1) * TILE_SIZE then
+            table.remove(objects, k)
+        end
+    end
+
+
+    -- -- create flag post
+    -- for poleType = 2, 0, -1 do
+    --     table.insert(flag, gene)
 end

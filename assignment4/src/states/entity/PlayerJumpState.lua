@@ -20,13 +20,13 @@ end
 
 function PlayerJumpState:enter(params)
     gSounds['jump']:play()
-    self.player.dy = PLAYER_JUMP_VELOCITY
+    self.player.dy = PLAYER_JUMP_VELOCITY * 1.6
 end
 
 function PlayerJumpState:update(dt)
     self.player.currentAnimation:update(dt)
-    self.player.dy = self.player.dy + self.gravity
-    self.player.y = self.player.y + (self.player.dy * dt)
+    self.player.dy = self.player.dy + self.gravity * 1.6
+    self.player.y = self.player.y + (self.player.dy * dt) * 1.6
 
     -- go into the falling state when y velocity is positive
     if self.player.dy >= 0 then
