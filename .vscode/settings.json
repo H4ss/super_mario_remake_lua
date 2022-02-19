@@ -1,0 +1,11 @@
+{
+    "Lua.diagnostics.globals": [
+        "getKeyLockBase",
+        "love",
+        "gStateMachine",
+        "gSounds",
+        "gTextures",
+        "gFrames",
+        "gFonts"
+    ]
+}
