@@ -12,7 +12,15 @@ Player = Class{__includes = Entity}
 
 function Player:init(def)
     Entity.init(self, def)
-    self.score = 0
+    self.score = def.score or 0
+    self.keyObj = nil
+    self.levelComplete = def.levelComplete
+
+    if self.levelComplete then
+        Timer.after(4, function()
+            self.levelComplete = false
+        end)
+    end
 end
 
 function Player:update(dt)

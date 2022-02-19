@@ -91,3 +91,10 @@ JUMP_BLOCKS = {}
 for i = 1, 30 do
     table.insert(JUMP_BLOCKS, i)
 end
+
+KEYS_LOCKS = {
+    1, 2, 3, 4
+}
+
+KEY_ID = 0
+LOCK_ID = 4

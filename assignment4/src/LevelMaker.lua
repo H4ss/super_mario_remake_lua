@@ -16,11 +16,17 @@ function LevelMaker.generate(width, height)
     local objects = {}
 
     local tileID = TILE_ID_GROUND
+
+    local groundHeight = 6
+    local pillarHeight = 4
     
     -- whether we should draw our tiles with toppers
     local topper = true
     local tileset = math.random(20)
     local topperset = math.random(20)
+
+    local keyLockColor = math.random(#KEYS_LOCKS)
+    local flagPostColor = math.random(#FLAG_POSTS)
 
     -- insert blank tables into tiles for later access
     for x = 1, height do
@@ -167,10 +173,102 @@ function LevelMaker.generate(width, height)
                 )
             end
         end
+        ::continue::
     end
+
+    -- spawn lock block
+    local spawned = false
+    while not spawned do
+        local xPos = math.random(width)
+        if tiles[height][xPos].id == TILE_ID_GROUND then
+                local blockHeight 
+                if tiles[groundHeight][xPos].id == TILE_ID_EMPTY then
+                    blockHeight = groundHeight - 2
+                else
+                    blockHeight = pillarHeight - 2
+                end
+
+                local lock = getKeyLockBase(LOCK_ID, blockHeight, xPos, keyLockColor)
+
+                -- if the player has key, the block is marked as "remove" and the key is removed too
+
+                lock.onCollide = function(player, object)
+
+                    if player.keyObj then
+                        gSounds['pickup']:play()
+                        player.keyObj = nil
+                        object.remove = true
+
+                        -- spawn flag
+
+                        local flagObjects = getFlag(tiles, objects, width, height, flagPostColor)
+                        for k, obj  in pairs(flagObjects) do
+                            table.insert(objects, obj)
+                        end
+                    else
+                        gSounds['empty-block']:play()
+                    end
+                end
+                table.insert(objects, GameObject(lock))
+                spawned = true
+
+                -- remove any block at the key block position
+                for k, obj in pairs(objects) do
+                    if obj.texture == 'jump-blocks' and obj.x == (xPos - 1) * TILE_SIZE then
+                        table.remove(objects, k)
+                        break
+                    end
+                end
+            end
+        end
+
+    -- spawn key
+    spawned = false
+    while not spawned do
+        local xPos = math.random(width)
+        if tiles[height][xPos].id == TILE_ID_GROUND then
+                local blockHeight 
+                if tiles[groundHeight][xPos].id == TILE_ID_EMPTY then
+                    blockHeight = groundHeight - 2
+                elseif tiles[pillarHeight][xPos].id == TILE_ID_EMPTY then
+                    blockHeight = pillarHeight - 2
+                end
+
+                local key = getKeyLockBase(KEY_ID, blockHeight, xPos, keyLockColor)
+
+                -- if the player has key, the block is marked as "remove" and the key is removed too
+
+                key.onConsume = function(player, object)
+                        gSounds['pickup']:play()
+                        player.keyObj = object
+                        -- object.remove = true
+                end
+                table.insert(objects, GameObject(key))
+                spawned = true
+            end
+        end
 
     local map = TileMap(width, height)
     map.tiles = tiles
     
     return GameLevel(entities, objects, map)
+end
+
+function getKeyLockBase(keyOrLock, blockHeight, x, keyLockColor)
+
+    -- the y position for a key is the ground and for a block the block height
+    local yPos = keyOrLock == KEY_ID and blockHeight + 2 or blockHeight
+    return {
+        texture = 'keys-locks',
+        x = (x - 1) * TILE_SIZE,
+        y = (yPos - 1) * TILE_SIZE,
+        width = 16,
+        height = 16,
+
+        collidable = true,
+        consumable = keyOrLock == KEY_ID,
+        solid = keyOrLock == LOCK_ID,
+
+        frame = KEYS_LOCKS[keyLockColor] + keyOrLock
+    }
 end

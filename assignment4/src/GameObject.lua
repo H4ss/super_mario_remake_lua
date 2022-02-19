@@ -21,6 +21,8 @@ function GameObject:init(def)
     self.onCollide = def.onCollide
     self.onConsume = def.onConsume
     self.hit = def.hit
+    self.remove = def.remove or false
+    self.animation = def.animation
 end
 
 function GameObject:collides(target)
@@ -29,6 +31,9 @@ function GameObject:collides(target)
 end
 
 function GameObject:update(dt)
+    if self.animation then
+        self.animation:update(dt)
+    end
 
 end
 
