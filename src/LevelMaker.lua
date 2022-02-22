@@ -295,6 +295,63 @@ function getFlag(tiles, objects, width, height, flagPostColor)
 
 
     -- -- create flag post
-    -- for poleType = 2, 0, -1 do
-    --     table.insert(flag, gene)
+    for poleType = 2, 0, -1 do
+        table.insert(flag, generateFlagPost(width, flagPostColor, xPos, yPos, poleType))
+
+        if poleType == 1 then
+            yPos = yPos - 1
+            table.insert(flag, generateFlagPost(width, flagPostColor, xPos, yPos, poleType))
+
+            yPos = yPos - 1
+            table.insert(flag, generateFlagPost(width, flagPostColor, xPos, yPos, poleType))
+        end
+    
+        yPos = yPos - 1
+    end
+
+    -- add flags
+    table.insert(flag, generateFlag(width, flagPostColor, xPos, yPos + 2))
+
+    return flag
+end
+
+function generateFlag(width, flagPostColor, xPos, yPos)
+    local baseFrame = FLAGS[math.random(#FLAGS)]
+    return GameObject {
+        texture = 'flags',
+        x = (xPos - 1) * TILE_SIZE + 8,
+        y = (yPos - 1) * TILE_SIZE - 8,
+        width = 16,
+        height = 16,
+        frame = baseFrame,
+        -- collidable = true,
+        -- consumable = true,
+        -- solid = false,
+    }
+end
+
+function generateFlagPost(width, flagPostColor, xPos, yPos, poleType)
+    return GameObject {
+        texture = 'flags',
+        x = (xPos - 1) * TILE_SIZE,
+        y = (yPos - 1) * TILE_SIZE,
+        width = 6,
+        height = 16,
+        frame = flagPostColor + poleType * 9,
+        collidable = true,
+        consumable = true,
+        solid = false,
+
+        -- flag has its own function to add to the player's score
+        onConsume = function(player, object)
+            gSounds['pickup']:play()
+            player.score = player.score + 250
+
+            gStateMachine:change('play', {
+                levelWidth = width + 10,
+                score = player.score,
+                levelComplete = true
+            })
+        end
+    }
 end

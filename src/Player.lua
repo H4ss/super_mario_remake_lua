@@ -31,6 +31,14 @@ function Player:render()
     Entity.render(self)
 end
 
+function Player:renderLevelComplete()
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.setColor(0, 0, 0, 255)
+    love.graphics.rectangle('fill', 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.printf('Level Complete!', 0, VIRTUAL_HEIGHT / 2 - 8, VIRTUAL_WIDTH, 'center')
+end
+
 function Player:checkLeftCollisions(dt)
     -- check for left two tiles collision
     local tileTopLeft = self.map:pointToTile(self.x + 1, self.y + 1)

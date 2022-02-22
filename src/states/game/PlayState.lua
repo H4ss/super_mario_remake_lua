@@ -10,13 +10,24 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init()
     self.camX = 0
     self.camY = 0
-    self.level = LevelMaker.generate(100, 10)
-    self.tileMap = self.level.tileMap
+    -- self.level = LevelMaker.generate(100, 10)
+    -- self.tileMap = self.level.tileMap
+    
     self.background = math.random(3)
     self.backgroundX = 0
 
     self.gravityOn = true
     self.gravityAmount = 6
+end
+
+function PlayState:enter(params)
+    self.level = LevelMaker.generate(100, 10)
+    self.tileMap = self.level.tileMap
+    -- self.background = math.random(3)
+    -- self.backgroundX = 0
+
+    -- self.gravityOn = true
+    -- self.gravityAmount = 6
 
     self.player = Player({
         x = 0, y = 0,
@@ -28,14 +39,17 @@ function PlayState:init()
             ['jump'] = function() return PlayerJumpState(self.player, self.gravityAmount) end,
             ['falling'] = function() return PlayerFallingState(self.player, self.gravityAmount) end
         },
+        -- score = params.score or 0,
         map = self.tileMap,
-        level = self.level
+        level = self.level,
+        -- levelComplete = params.levelComplete or false
     })
 
     self:spawnEnemies()
 
     self.player:changeState('falling')
 end
+
 
 function PlayState:update(dt)
     Timer.update(dt)
@@ -77,6 +91,10 @@ function PlayState:render()
     -- render key
     if self.player.keyObj then
         love.graphics.draw(gTextures[self.player.keyObj.texture], gFrames[self.player.keyObj.texture][self.player.keyObj.frame], 5, 20)
+    end
+
+    if self.player.levelComplete then
+        self.player:renderLevelComplete()
     end
     
     -- render score
